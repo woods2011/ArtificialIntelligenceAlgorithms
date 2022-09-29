@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SharedCL\SharedCL.csproj" />
+      <ProjectReference Include="..\SharedWPF\SharedWPF.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Views" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Xceed.Wpf.Toolkit.NET5">
+        <HintPath>..\..\..\.nuget\packages\extended.wpf.toolkit\4.4.0\lib\net5.0\Xceed.Wpf.Toolkit.NET5.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="PropertyChanged.Fody" Version="4.0.3" />
+    </ItemGroup>
+
+</Project>

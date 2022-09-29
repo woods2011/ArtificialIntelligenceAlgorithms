@@ -1,0 +1,264 @@
+﻿<Window x:Class="BfoAlg.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:viewModels="clr-namespace:BfoAlg.ViewModels"
+        xmlns:viewModelsShared="clr-namespace:SharedWPF.ViewModels;assembly=SharedWPF"
+        xmlns:vmBuilders="clr-namespace:BfoAlg.ViewModels.Builders"
+        xmlns:viewsShared="clr-namespace:SharedWPF.Views;assembly=SharedWPF"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        md:DialogServiceViews.IsRegistered="True"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Алгоритм Моделирования Перемещения Бактерий (BFOA)" Height="1000" Width="1400"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=True}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate DataType="{x:Type viewModelsShared:MessageViewModel}">
+            <viewsShared:MessageView />
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ContentControl Grid.Row="0" Content="{Binding MessageViewModel}"
+                        Visibility="{Binding MessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <ScrollViewer Grid.Row="1">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <StackPanel Margin="0,0,0,5">
+                        <Grid MaxWidth="400">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="F(x1,x2) =" HorizontalAlignment="Right" />
+                            <TextBox Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.SelectedFunction}"
+                                     Padding="2,0"
+                                     VerticalContentAlignment="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Набор функций:" />
+                            <ComboBox Grid.Row="1" Grid.Column="1"
+                                      VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.ObjectiveFunctions}"
+                                      SelectedItem="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.SelectedFunction}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <WrapPanel Orientation="Vertical" Margin="0,0,10,5">
+                            <Label Content="Область поиска по X1" HorizontalAlignment="Center" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                </Grid.ColumnDefinitions>
+                                <wpfTool:DoubleUpDown Grid.Column="0" Margin="5,0,2,0"
+                                                      Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X1Bounds.A}"
+                                                      Increment="1" />
+                                <wpfTool:DoubleUpDown Grid.Column="1" Margin="2,0,5,0"
+                                                      Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X1Bounds.B}"
+                                                      Minimum="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X1Bounds.A}"
+                                                      ClipValueToMinMax="True"
+                                                      Increment="1" />
+                            </Grid>
+                        </WrapPanel>
+
+                        <WrapPanel Orientation="Vertical" Margin="0,0,10,5">
+                            <Label Content="Область поиска по X2" HorizontalAlignment="Center" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                </Grid.ColumnDefinitions>
+                                <wpfTool:DoubleUpDown Grid.Column="0" Margin="5,0,2,0"
+                                                      Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X2Bounds.A}"
+                                                      Increment="1" />
+                                <wpfTool:DoubleUpDown Grid.Column="1" Margin="2,0,5,0"
+                                                      Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X2Bounds.B}"
+                                                      Minimum="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.X2Bounds.A}"
+                                                      ClipValueToMinMax="True"
+                                                      Increment="1" />
+                            </Grid>
+                        </WrapPanel>
+                    </StackPanel>
+
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="75" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Margin="0,0,0,5" Content="Размер колонии (S):" />
+                        <wpfTool:IntegerUpDown Grid.Row="0" Grid.Column="1" Margin="0,0,0,5"
+                                               Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.ColonySize}"
+                                               Increment="10" Minimum="4" Maximum="10000" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Margin="0,0,0,5"
+                               Content="Количество хемотаксических шагов (Nс):" />
+                        <wpfTool:IntegerUpDown Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"
+                                               Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.NumChemotacticLoops}"
+                                               Increment="5" Minimum="2" Maximum="1000" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Margin="0,0,0,5"
+                               Content="Макс. количество шагов плавания (Ns):" />
+                        <wpfTool:IntegerUpDown Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"
+                                               Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.NumSwimLoops}"
+                                               Increment="1" Minimum="2" Maximum="1000" />
+
+                        <Label Grid.Row="3" Grid.Column="0" Margin="0,0,0,5"
+                               Content="Количество шагов воспроизведения-исключения (Nre):" />
+                        <wpfTool:IntegerUpDown Grid.Row="3" Grid.Column="1" Margin="0,0,0,5"
+                                               Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.NumReproduceElimLoops}"
+                                               Increment="2" Minimum="2" Maximum="1000" />
+
+                        <Label Grid.Row="4" Grid.Column="0" Margin="0,0,0,5"
+                               Content="Количество шагов исключения-рассеивания (Ned):" />
+                        <wpfTool:IntegerUpDown Grid.Row="4" Grid.Column="1" Margin="0,0,0,5"
+                                               Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.NumElimDispLoops}"
+                                               Increment="1" Minimum="2" Maximum="1000" />
+
+                        <Label Grid.Row="5" Grid.Column="0" Margin="0,0,0,5"
+                               Content="Вероятность исключения-рассеивания (Ped):" />
+                        <wpfTool:DoubleUpDown Grid.Row="5" Grid.Column="1" Margin="0,0,0,5"
+                                              Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.ProbElimDisp}"
+                                              Increment="0.025" Minimum="0" Maximum="1" />
+
+                        <Label Grid.Row="6" Grid.Column="0" Content="Размер шага (C):" />
+                        <wpfTool:DoubleUpDown Grid.Row="6" Grid.Column="1"
+                                              Value="{Binding AlgBuilderVm.BfoAlgSettingsBuilderVm.StepSize}"
+                                              Increment="0.01" Minimum="0" Maximum="1" />
+                    </Grid>
+
+                    <Button Margin="5,20,0,5" Padding="15"
+                            Command="{Binding FindMinCommand}"
+                            Content="Поиск Минимума Функции" FontWeight="Bold" FontSize="14" />
+
+                    <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                        <Label Content="Результат работы алгоритма" Margin="0,0,0,3" FontWeight="Bold" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="X1:" />
+                            <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.X[0], FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="X2:" />
+                            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.X[1], FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="F(x1,x2):" />
+                            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.FuncValue, FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0" HorizontalAlignment="Center">
+                        <Button Padding="15" Margin="0,0,10,0" Command="{Binding AnimatePlotAsyncCommand}"
+                                Content="Анимация работы алгоритма" FontWeight="Bold" FontSize="14"
+                                HorizontalAlignment="Left" />
+
+                        <Button Padding="15" Margin="0,0,10,0" Command="{Binding StopAnimatePlotAsyncCommand}"
+                                Content="СТОП" FontWeight="Bold" FontSize="14"
+                                HorizontalAlignment="Left" />
+
+                        <StackPanel Margin="0,0,10,0" VerticalAlignment="Bottom">
+                            <Label Content="Отрисовок в секунду" />
+                            <wpfTool:IntegerUpDown Value="{Binding DrawSpeed}" Minimum="1" Maximum="50"
+                                                   Increment="10" />
+                        </StackPanel>
+
+                        <StackPanel VerticalAlignment="Bottom">
+                            <Label Content="Поколений за отрисовку" />
+                            <wpfTool:IntegerUpDown Value="{Binding IterationsPerTick}" Minimum="1"
+                                                   Increment="10" />
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <oxy:PlotView Grid.Row="1" Margin="0,0,0,5" Model="{Binding PlotModel}" />
+
+                    <StackPanel Grid.Row="2">
+                        <Border Margin="0,0,0,5" BorderThickness="2" BorderBrush="Gray">
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <DockPanel>
+                                    <Label Content="Ход работы алгоритма" FontWeight="DemiBold" DockPanel.Dock="Left" />
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
+                                                HorizontalAlignment="Right">
+                                        <Label Content="Максимум записей:" />
+                                        <wpfTool:IntegerUpDown Value="{Binding MaxLogSize}" Minimum="100"
+                                                               Maximum="1000" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <ScrollViewer MaxHeight="120">
+                                    <TextBlock Text="{Binding LastOptimizationLog}" />
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Border>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="14"
+                                Command="{Binding SaveLastResultCommand, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Сохранить Результат Оптимизации" />
+
+                        <Button Padding="5" FontSize="14"
+                                Command="{Binding SaveLastResultWithLogCommand, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Сохранить Подробный Лог Оптимизации" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

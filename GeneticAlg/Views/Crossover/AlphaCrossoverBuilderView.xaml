@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="GeneticAlg.Views.Crossover.AlphaCrossoverBuilderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GeneticAlg.Views"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:crossover="clr-namespace:GeneticAlg.ViewModels.Builders.Crossover"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=crossover:AlphaCrossoverBuilderVm, IsDesignTimeCreatable=True}">
+    <WrapPanel Orientation="Vertical">
+        <Label Content="Смешанный кроссовер" FontWeight="DemiBold" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="55" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Вероятность скрещивания:" />
+            <xctk:DoubleUpDown Grid.Row="0" Grid.Column="1" Value="{Binding CrossingProbability}"
+                                  Minimum="0" Maximum="1" Increment="0.02" />
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Параметр Alpha:" />
+            <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Alpha}"
+                                  Minimum="0" Maximum="1" Increment="0.1" />
+        </Grid>
+    </WrapPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>
+	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">c:\program files\dotnet\sdk\6.0.300\MSBuild.dll</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=804c1c6d_002Dbea4_002D4b66_002Da0f1_002D2b2e82df9285/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestParser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::795603EA-9549-48C7-B47D-02C5AF1DB812::net5.0::SharedCL.Tests.Tests.TestParser&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::B67EDF3F-D595-49CB-BADF-1BABC38F4951::net5.0-windows::GeneticAlg.Tests.Tests.TestGeneticAlgModel&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::B67EDF3F-D595-49CB-BADF-1BABC38F4951::net5.0-windows::GeneticAlg.Tests.Tests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::E06E6D43-55FE-4E0E-A8DF-A739F2BD1E1C::net5.0-windows::BfoALg.Tests.Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

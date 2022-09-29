@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="AbcAlg.Views.TempUpdaters.SimpleTempUpdaterBuilderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AbcAlg.Views.TempUpdaters"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:tempUpdatersVm="clr-namespace:AbcAlg.ViewModels.Builders.TempUpdaters"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=tempUpdatersVm:SimpleTempUpdaterBuilderVm, IsDesignTimeCreatable=True}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="55" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Начальная Температура:" />
+        <xctk:DoubleUpDown Grid.Row="0" Grid.Column="1" Value="{Binding InitTemp}"
+                              Minimum="1" Increment="10" />
+        <Label Grid.Row="1" Grid.Column="0" Content="Параметр α:" />
+        <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Alpha}"
+                              Minimum="0" Increment="0.1" />
+    </Grid>
+</UserControl>

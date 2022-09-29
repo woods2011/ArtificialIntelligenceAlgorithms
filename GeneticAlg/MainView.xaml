@@ -1,0 +1,283 @@
+﻿<Window x:Class="GeneticAlg.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:viewModels="clr-namespace:GeneticAlg.ViewModels"
+        xmlns:viewModelsShared="clr-namespace:SharedWPF.ViewModels;assembly=SharedWPF"
+        xmlns:vmBuilders="clr-namespace:GeneticAlg.ViewModels.Builders"
+        xmlns:views="clr-namespace:GeneticAlg.Views"
+        xmlns:viewsShared="clr-namespace:SharedWPF.Views;assembly=SharedWPF"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        xmlns:selectionViews="clr-namespace:GeneticAlg.Views.Selection"
+        xmlns:crossoverViews="clr-namespace:GeneticAlg.Views.Crossover"
+        xmlns:mutatuionViews="clr-namespace:GeneticAlg.Views.Mutation"
+        xmlns:crossoverVms="clr-namespace:GeneticAlg.ViewModels.Builders.Crossover"
+        xmlns:mutationVms="clr-namespace:GeneticAlg.ViewModels.Builders.Mutation"
+        xmlns:selectionVms="clr-namespace:GeneticAlg.ViewModels.Builders.Selection"
+        md:DialogServiceViews.IsRegistered="True"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Генетический Алгоритм" Height="1000" Width="1400"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=True}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate DataType="{x:Type viewModelsShared:MessageViewModel}">
+            <viewsShared:MessageView />
+        </DataTemplate>
+
+        <!-- Селекция -->
+        <DataTemplate DataType="{x:Type selectionVms:TournamentSelectionBuilderVm}">
+            <selectionViews:TournamentSelectionBuilderView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type selectionVms:RouletteSelectionBuilderVm}">
+            <Label Content="Пропорциональный отбор" FontWeight="DemiBold" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type selectionVms:SusSelectionBuilderVm}">
+            <Label Content="Стохастический универсальный отбор" FontWeight="DemiBold" />
+        </DataTemplate>
+
+        <!-- Скрещивание -->
+        <DataTemplate DataType="{x:Type crossoverVms:ExtendedLineCrossoverBuilderVm}">
+            <crossoverViews:ExtendedLineCrossoverBuilderView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type crossoverVms:AlphaCrossoverBuilderVm}">
+            <crossoverViews:AlphaCrossoverBuilderView />
+        </DataTemplate>
+
+        <!-- Мутация -->
+        <DataTemplate DataType="{x:Type mutationVms:GaussianMutationBuilderVm}">
+            <mutatuionViews:GaussianMutationBuilderView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type mutationVms:UniformMutationBuilderVm}">
+            <mutatuionViews:UniformMutationBuilderView />
+        </DataTemplate>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0,0,5,5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Gray" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ContentControl Grid.Row="0" Content="{Binding MessageViewModel}"
+                        Visibility="{Binding MessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <ScrollViewer Grid.Row="1">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+
+                    <StackPanel Margin="0,0,0,5">
+                        <Grid MaxWidth="300">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="F(x1,x2) =" HorizontalAlignment="Right" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AlgBuilderVm.SelectedFunction}"
+                                     Padding="2,0"
+                                     VerticalContentAlignment="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Набор функций:" />
+                            <ComboBox Grid.Row="1" Grid.Column="1"
+                                      VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding AlgBuilderVm.ObjectiveFunctions}"
+                                      SelectedItem="{Binding AlgBuilderVm.SelectedFunction}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <WrapPanel Orientation="Vertical" Margin="0,0,10,5">
+                            <Label Content="Область поиска по X1" HorizontalAlignment="Center" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                </Grid.ColumnDefinitions>
+                                <wpfTool:DoubleUpDown Grid.Column="0" Margin="5,0,2,0"
+                                                      Value="{Binding AlgBuilderVm.X1Bounds.A}"
+                                                      Increment="1" />
+                                <wpfTool:DoubleUpDown Grid.Column="1" Margin="2,0,5,0"
+                                                      Value="{Binding AlgBuilderVm.X1Bounds.B}"
+                                                      Minimum="{Binding AlgBuilderVm.X1Bounds.A}"
+                                                      ClipValueToMinMax="True"
+                                                      Increment="1" />
+                            </Grid>
+                        </WrapPanel>
+
+                        <WrapPanel Orientation="Vertical" Margin="0,0,10,5">
+                            <Label Content="Область поиска по X2" HorizontalAlignment="Center" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                    <ColumnDefinition MinWidth="50" MaxWidth="150" />
+                                </Grid.ColumnDefinitions>
+                                <wpfTool:DoubleUpDown Grid.Column="0" Margin="5,0,2,0"
+                                                      Value="{Binding AlgBuilderVm.X2Bounds.A}"
+                                                      Increment="1" />
+                                <wpfTool:DoubleUpDown Grid.Column="1" Margin="2,0,5,0"
+                                                      Value="{Binding AlgBuilderVm.X2Bounds.B}"
+                                                      Minimum="{Binding AlgBuilderVm.X2Bounds.A}"
+                                                      ClipValueToMinMax="True"
+                                                      Increment="1" />
+                            </Grid>
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <WrapPanel Orientation="Vertical" Margin="0,0,4,5">
+                            <Label Content="Количество поколений" HorizontalAlignment="Center" />
+                            <wpfTool:IntegerUpDown Margin="5,0" Value="{Binding AlgBuilderVm.CountGenerations}"
+                                                   Increment="100" Minimum="1" Maximum="100000" />
+                        </WrapPanel>
+
+                        <WrapPanel Orientation="Vertical" Margin="0,0,5,5">
+                            <Label Content="Размер популяции" HorizontalAlignment="Center" />
+                            <wpfTool:IntegerUpDown Margin="5,0" Value="{Binding AlgBuilderVm.PopulationSize}"
+                                                   Increment="5" Minimum="4" Maximum="1000" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Label Content="Выбор способа селекции" FontWeight="Bold" />
+                        <ListBox Margin="5,0,0,5" MaxHeight="150"
+                                 ItemsSource="{Binding AlgBuilderVm.Selections}"
+                                 SelectedItem="{Binding AlgBuilderVm.SelectedSelection}"
+                                 ScrollViewer.CanContentScroll="False" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Label Content="Выбор способа скрещивания" FontWeight="Bold" />
+                        <ListBox Margin="5,0,0,5" MaxHeight="150"
+                                 ItemsSource="{Binding AlgBuilderVm.Crossovers}"
+                                 SelectedItem="{Binding AlgBuilderVm.SelectedCrossover}"
+                                 ScrollViewer.CanContentScroll="False" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Label Content="Выбор способа мутации" FontWeight="Bold" />
+                        <ListBox Margin="5,0,0,5" MaxHeight="150"
+                                 ItemsSource="{Binding AlgBuilderVm.Mutations}"
+                                 SelectedItem="{Binding AlgBuilderVm.SelectedMutation}"
+                                 ScrollViewer.CanContentScroll="False" />
+                    </StackPanel>
+
+                    <Button Margin="5,20,0,5" Padding="15"
+                            Command="{Binding FindMinCommand}"
+                            Content="Поиск Минимума Функции" FontWeight="Bold" FontSize="14" />
+
+                    <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                        <Label Content="Результат работы алгоритма" Margin="0,0,0,3" FontWeight="Bold" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="X1:" />
+                            <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.X1, FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="X2:" />
+                            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.X2, FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="F(x1,x2):" />
+                            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True"
+                                     Text="{Binding LastOptimizationResult.FuncValue, FallbackValue=...}"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="1" BorderBrush="Gray" Background="AliceBlue" />
+
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0" HorizontalAlignment="Center">
+                        <Button Padding="15" Margin="0,0,10,0" Command="{Binding AnimatePlotAsyncCommand}"
+                                Content="Анимация работы алгоритма" FontWeight="Bold" FontSize="14"
+                                HorizontalAlignment="Left" />
+
+                        <Button Padding="15" Margin="0,0,10,0" Command="{Binding StopAnimatePlotAsyncCommand}"
+                                Content="СТОП" FontWeight="Bold" FontSize="14"
+                                HorizontalAlignment="Left" />
+
+                        <StackPanel Margin="0,0,10,0" VerticalAlignment="Bottom">
+                            <Label Content="Отрисовок в секунду" />
+                            <wpfTool:IntegerUpDown Value="{Binding DrawSpeed}" Minimum="1" Maximum="50"
+                                                   Increment="10" />
+                        </StackPanel>
+
+                        <StackPanel VerticalAlignment="Bottom">
+                            <Label Content="Поколений за отрисовку" />
+                            <wpfTool:IntegerUpDown Value="{Binding GenerationsPerTick}" Minimum="1"
+                                                   Increment="10" />
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <oxy:PlotView Grid.Row="1" Margin="0,0,0,5" Model="{Binding PlotModel}" />
+
+                    <StackPanel Grid.Row="2">
+                        <Border Margin="0,0,0,5" BorderThickness="2" BorderBrush="Gray">
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <DockPanel>
+                                    <Label Content="Ход работы алгоритма" FontWeight="DemiBold" DockPanel.Dock="Left" />
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
+                                                HorizontalAlignment="Right">
+                                        <Label Content="Максимум записей:" />
+                                        <wpfTool:IntegerUpDown Value="{Binding MaxLogSize}" Minimum="100"
+                                                               Maximum="1000" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <ScrollViewer MaxHeight="120">
+                                    <TextBlock Text="{Binding LastOptimizationLog}" />
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Border>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="14"
+                                Command="{Binding SaveLastResultCommand, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Сохранить Результат Оптимизации" />
+
+                        <Button Padding="5" FontSize="14"
+                                Command="{Binding SaveLastResultWithLogCommand, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Сохранить Подробный Лог Оптимизации" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

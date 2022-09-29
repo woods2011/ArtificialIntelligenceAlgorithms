@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MvvmDialogs" Version="9.1.0" />
+      <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
+      <PackageReference Include="PropertyChanged.Fody" Version="4.0.3" />
+    </ItemGroup>
+
+</Project>
